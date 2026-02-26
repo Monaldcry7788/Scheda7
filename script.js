@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', loadComuni);
 
 function loadComuni() {
-    fetch('php/Comuni.php')
+    fetch('/php/Comuni.php')
         .then(res => {
             if (!res.ok)
                 throw new Error('GET failed: ' + res.status);
@@ -9,7 +9,7 @@ function loadComuni() {
         })
         .then(jsonData => {
             console.log("Data received:", jsonData);
-            return fetch('php/viewer/ComuniViewer.php', {
+            return fetch('/php/viewer/ComuniViewer.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(jsonData)
@@ -32,7 +32,12 @@ function loadComuni() {
 
 function loadContribuenti() {
     var comune = document.getElementById('comuni').value;
-    fetch(`php/Contribuenti.php?com_id=${encodeURIComponent(comune)}`)
+    if (!comune)
+    {
+        document.getElementById('AjaxResponse').innerHTML = '<div id="AjaxResponse></div>';
+        return;
+    }
+    fetch(`/php/Contribuenti.php?com_id=${encodeURIComponent(comune)}`)
         .then(res => {
             if (!res.ok)
                 throw new Error('GET failed: ' + res.status);
