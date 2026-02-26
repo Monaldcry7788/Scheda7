@@ -26,6 +26,8 @@ function loadComuni() {
                 target.innerHTML = html;
         })
         .catch(err => console.error('Error:', err));
+
+    document.getElementById('combo').addEventListener('change', loadContribuenti);
 }
 
 function loadContribuenti() {
@@ -37,7 +39,6 @@ function loadContribuenti() {
             return res.json();
         })
         .then(jsonData => {
-            console.log(jsonData);
             return fetch('php/viewer/ContribuentiViewer.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

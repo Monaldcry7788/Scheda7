@@ -1,14 +1,14 @@
 <?php
 
 namespace viewer;
+header('Content-Type: text/html; charset=utf-8');
 
 class ContribuentiViewer
 {
     public function render() : String {
-        $html = '<div id = response>';
-        $html .= '<label for="contribuenti">Contribuenti:</label>';
-        $html .= '<ul id="contribuenti">';
         $contribuenti = json_decode(file_get_contents("php://input"));
+        $html = '<div id = AjaxResponse>';
+        $html .= '<ul id="contribuenti">';
         foreach ($contribuenti as $contribuente) {
             $html .= '<li>' . $contribuente->con_nome . '</li>';
         }

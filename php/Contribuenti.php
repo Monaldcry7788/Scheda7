@@ -12,7 +12,7 @@ class Contribuenti
     }
 
     public function getByComune(string $com_id): string {
-        $sql = 'SELECT con_nome FROM contribuenti WHERE con_com_id = :com_id ORDER BY con_nome';
+        $sql = 'SELECT contribuenti.con_nome FROM contribuenti WHERE con_com_id = :com_id ORDER BY con_nome';
         $stmt = $this->conn->prepare($sql);
         $stmt->bindValue(':com_id', $com_id, PDO::PARAM_INT);
         $stmt->execute();
@@ -20,5 +20,12 @@ class Contribuenti
     }
 }
 
+$com_id = filter_input(INPUT_GET, 'com_id', FILTER_VALIDATE_INT);
+if ($com_id === false || $com_id === null) {
+    http_response_code(400);
+    echo json_encode(['error' => 'Parametro com_id mancante o non valido']);
+    exit;
+}
+
 $contribuenti = new Contribuenti();
-echo $contribuenti->getByComune($_GET['com_id']);
+echo $contribuenti->getByComune($com_id);
