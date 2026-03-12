@@ -8,7 +8,6 @@ function loadComuni() {
     var xmlHttpRequest = getXMLHttpRequest();
     xmlHttpRequest.onreadystatechange = function() {
         if (this.readyState === 4 && this.status === 200) {
-            if (this.status === 200) {
                 var jsonData = JSON.parse(this.responseText);
                 var postRequest = getXMLHttpRequest();
                 postRequest.onreadystatechange = function() {
@@ -26,7 +25,6 @@ function loadComuni() {
             } else {
                 console.error('GET failed: ' + this.status);
             }
-        }
     };
     xmlHttpRequest.open('GET', '/php/Comuni.php', true);
     xmlHttpRequest.send();
@@ -44,7 +42,6 @@ function loadContribuenti() {
     var xmlHttpRequest = getXMLHttpRequest();
     xmlHttpRequest.onreadystatechange = function() {
         if (this.readyState === 4 && this.status === 200) {
-            if (this.status === 200) {
                 var jsonData = JSON.parse(this.responseText);
                 var postRequest = getXMLHttpRequest();
                 postRequest.onreadystatechange = function() {
@@ -62,7 +59,6 @@ function loadContribuenti() {
             } else {
                 console.error('GET failed: ' + this.status);
             }
-        }
     };
     xmlHttpRequest.open('GET', `/php/Contribuenti.php?com_id=${encodeURIComponent(comune)}`, true);
     xmlHttpRequest.send();
