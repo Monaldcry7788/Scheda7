@@ -1,62 +1,69 @@
 document.addEventListener('DOMContentLoaded', loadComuni);
 
-function loadComuni() {
-    fetch('/php/Comuni.php')
-        .then(res => {
-            if (!res.ok)
-                throw new Error('GET failed: ' + res.status);
-            return res.json();
-        })
-        .then(jsonData => {
-            console.log("Data received:", jsonData);
-            return fetch('/php/viewer/ComuniViewer.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(jsonData)
-            });
-        })
-        .then(res => {
-            if (!res.ok)
-                throw new Error('POST failed: ' + res.status);
-            return res.text();
-        })
-        .then(html => {
-            const target = document.getElementById('combo');
-            if (target)
-                target.innerHTML = html;
-        })
-        .catch(err => console.error('Error:', err));
+function getXMLHttpRequest() {
+        return new XMLHttpRequest();
+}
 
+function loadComuni() {
+    var xmlHttpRequest = getXMLHttpRequest();
+    xmlHttpRequest.onreadystatechange = function() {
+        if (this.readyState === 4 && this.status === 200) {
+            if (this.status === 200) {
+                var jsonData = JSON.parse(this.responseText);
+                var postRequest = getXMLHttpRequest();
+                postRequest.onreadystatechange = function() {
+                    if (this.readyState === 4) {
+                        if (this.status === 200) {
+                            document.getElementById('combo').innerHTML = this.responseText;
+                        } else {
+                            console.error('POST failed: ' + this.status);
+                        }
+                    }
+                };
+                postRequest.open('POST', '/php/viewer/ComuniViewer.php', true);
+                postRequest.setRequestHeader('Content-Type', 'application/json');
+                postRequest.send(JSON.stringify(jsonData));
+            } else {
+                console.error('GET failed: ' + this.status);
+            }
+        }
+    };
+    xmlHttpRequest.open('GET', '/php/Comuni.php', true);
+    xmlHttpRequest.send();
     document.getElementById('combo').addEventListener('change', loadContribuenti);
 }
 
 function loadContribuenti() {
     var comune = document.getElementById('comuni').value;
-    if (!comune)
+    if (comune === "-1")
     {
         document.getElementById('AjaxResponse').innerHTML = '<div id="AjaxResponse></div>';
         return;
     }
-    fetch(`/php/Contribuenti.php?com_id=${encodeURIComponent(comune)}`)
-        .then(res => {
-            if (!res.ok)
-                throw new Error('GET failed: ' + res.status);
-            return res.json();
-        })
-        .then(jsonData => {
-            return fetch('php/viewer/ContribuentiViewer.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(jsonData)
-            });
-        })
-        .then(res => {
-            if (!res.ok)
-                throw new Error('POST failed: ' + res.status);
-            return res.text();
-        })
-        .then(html => {
-            document.getElementById('AjaxResponse').innerHTML = html;
-        })
-        .catch(err => console.error('Error:', err));
+
+    var xmlHttpRequest = getXMLHttpRequest();
+    xmlHttpRequest.onreadystatechange = function() {
+        if (this.readyState === 4 && this.status === 200) {
+            if (this.status === 200) {
+                var jsonData = JSON.parse(this.responseText);
+                var postRequest = getXMLHttpRequest();
+                postRequest.onreadystatechange = function() {
+                    if (this.readyState === 4) {
+                        if (this.status === 200) {
+                            document.getElementById('AjaxResponse').innerHTML = this.responseText;
+                        } else {
+                            console.error('POST failed: ' + this.status);
+                        }
+                    }
+                };
+                postRequest.open('POST', '/php/viewer/ContribuentiViewer.php', true);
+                postRequest.setRequestHeader('Content-Type', 'application/json');
+                postRequest.send(JSON.stringify(jsonData));
+            } else {
+                console.error('GET failed: ' + this.status);
+            }
+        }
+    };
+    xmlHttpRequest.open('GET', `/php/Contribuenti.php?com_id=${encodeURIComponent(comune)}`, true);
+    xmlHttpRequest.send();
 }

@@ -9,7 +9,7 @@ class ComuniViewer
         $html = '<div id = combo>';
         $html .= '<label for="comuni">Comuni:</label>';
         $html .= '<select id="comuni" name="comuni">';
-        $html .= '<option></option>';
+        $html .= '<option value = "-1">--Seleziona--</option>';
         $comuni = json_decode(file_get_contents("php://input"));
         foreach ($comuni as $comune) {
             $html .= '<option value="'.$comune->com_id.'">' . $comune->com_nome . '</option>';
